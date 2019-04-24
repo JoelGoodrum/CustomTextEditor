@@ -30,6 +30,11 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 
+import javafx.scene.input.KeyCode; 
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+
+
 public class TextEditorMain extends Application {
 
 
@@ -37,12 +42,16 @@ public class TextEditorMain extends Application {
     @Override
 	public void start(Stage primaryStage) throws Exception{
 
+		//text variable
+		int[] lineNumb = {1};
+
 		String textStyle_css = "-fx-font-family:Consolas; "+
 							   "-fx-font-weight:700;"+
 							   "-fx-control-inner-background: #282923;"+
 							   "-fx-highlight-fill: lightgray; "+
 							   "-fx-highlight-text-fill: firebrick;"+ 
-							   "-fx-font-size: 16px;";
+							   "-fx-font-size: 16px;"+
+							   "-fx-text-area-border: transparent;";
 
 		//show GUI
 		primaryStage.setTitle("MyTextEditor");
@@ -57,19 +66,36 @@ public class TextEditorMain extends Application {
 
 
 		//text
-		TextArea text = new TextArea();
-		text.setPrefHeight(600);
-		text.setPrefWidth(500);
-		text.setStyle(textStyle_css);
+		TextArea userText = new TextArea();
+		userText.setPrefHeight(600);
+		userText.setPrefWidth(500);
+		userText.setStyle(textStyle_css);
+
+		//numbs
+		TextArea numbText = new TextArea("1");
+		numbText.setEditable(false);
+		numbText.setPrefWidth(20);
+		numbText.setStyle(textStyle_css);
+		
+
+		userText.setOnKeyPressed(e -> {
+    		if (e.getCode() == KeyCode.ENTER) {
+        		lineNumb[0] = lineNumb[0] + 1;
+        		numbText.setText(numbText.getText() + "\n" + lineNumb[0] + "");
+   			}
+		});
 
 		//layout
-		VBox layout = new VBox(menuBar,text);
+		HBox textLayout = new HBox(numbText, userText);
+		VBox layout = new VBox(menuBar,textLayout);
 
 		//Scene
 		Scene scene = new Scene(layout,600,500);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
+
 
 		
 	}
@@ -79,6 +105,8 @@ public class TextEditorMain extends Application {
 	public static void main(String[] args) {
         Application.launch(args);
     }
+
+    
 
 }
 
